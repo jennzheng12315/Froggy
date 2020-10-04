@@ -1,43 +1,3 @@
-/* ____    ___       _      _       ____  
-  / ___|  / _ \     / \    | |     / ___| 
- | |  _  | | | |   / _ \   | |     \___ \ 
- | |_| | | |_| |  / ___ \  | |___   ___) |
-  \____|  \___/  /_/   \_\ |_____| |____/ 
-  
-0) Make the frog start at the start                      
-1) Move the frog in every direction
-2) Move the car
-  - resetting the car to the left
-3) Detect if frog hits car
-  - lose a life
-  - move frog back to start
-4) Detect when the frog gets to the glade
-  - gain a point
-  - moves back to the start
-
-  ____    _____   ____    _____   _____    ____   _   _ 
- / ___|  |_   _| |  _ \  | ____| |_   _|  / ___| | | | |
- \___ \    | |   | |_) | |  _|     | |   | |     | |_| |
-  ___) |   | |   |  _ <  | |___    | |   | |___  |  _  |
- |____/    |_|   |_| \_\ |_____|   |_|    \____| |_| |_|
-
-1) Add multiple cars.
-2) Add a certain goal - i.e. score 5 times to end the game.
-3) Make it so that you can only move the frog if the game
-   is not over.
-4) Make the game get more and more challenging as you win
-   more and more times.
-5) Color code your player pieces.
-6) Using some ideas from yesterday’s game, add some
-   collectible power-ups that make you temporarily
-   invincible, faster, smaller, or rainbow-colored.
-7) Add features like a river to the background - make some
-   additional modifications to the gameplay - perhaps
-   falling into the river also sends you back. Add logs
-   that float.
-
-*/
-
 // Name any p5.js functions we use in the global so Glitch can recognize them.
 /* global
  *    createCanvas, background
@@ -51,6 +11,8 @@
  */
 
 let backgroundColor, frogX, frogY, score, lives, gameIsOver, step;
+
+//Could have used an array for cars in hindsight...
 let car1X,
   car1Y,
   car1V,
@@ -77,12 +39,14 @@ function setup() {
   createCanvas(500, 500);
   colorMode(HSB, 360, 100, 100);
   backgroundColor = 0;
+  
   frogX = width / 2;
   frogY = height - 20;
   step = 10;
   score = 0;
   lives = 3;
   gameIsOver = false;
+  
   car1X = 0;
   car1Y = 400;
   car1V = 2;
@@ -95,6 +59,7 @@ function setup() {
   car4X = 0;
   car4Y = 100;
   car4V = 5;
+  
   powerup1X = random(10, width - 10);
   powerup1Y = random(100, 400);
   powerup2X = random(10, width - 10);
@@ -147,11 +112,11 @@ function keyPressed() {
 }
 
 function moveCars() {
-  // Move the car
   car1X += car1V;
   car2X += car2V;
   car3X += car3V;
   car4X += car4V;
+  
   // Reset if it moves off screen
   if (car1X > width) {
     car1X = 0;
@@ -168,10 +133,8 @@ function moveCars() {
 }
 
 function drawCars() {
-  // Code for car 1
   fill(0, 80, 80);
   rect(car1X, car1Y, 40, 30);
-  // Code for additional cars
   fill(30, 80, 80);
   rect(car2X, car2Y, 40, 30);
   fill(60, 80, 80);
@@ -224,6 +187,7 @@ function checkWin() {
     car3V += 0.5;
     car4V += 0.5;
   }
+  
   if (score == 5) {
     gameIsOver = true;
     powerupOn = false;
@@ -237,10 +201,10 @@ function checkWin() {
 function displayScores() {
   textSize(12);
   fill(255);
-  // Display Lives
+  
   text(`Lives: ${lives}`, 10, 20);
-  // Display Score
   text(`Score: ${score}`, 10, 40);
+  
   // Display game over message if the game is over
   if (gameIsOver) {
     textSize(20);
@@ -253,6 +217,7 @@ function displayScores() {
     }
   }
 }
+
 function powerups() {
   fill(320, 80, 80);
   ellipse(powerup1X, powerup1Y, 10);
@@ -271,24 +236,28 @@ function powerups() {
 
   if (hit2) {
     powerupOn = true;
-
+    //Unfinished powerup 2
   }
   if (powerupOn) {
     powerupTime();
   }
 }
 
+//Timer countdown for activated powerup
 function powerupTime() {
   powerupTimer--;
   textSize(20);
   fill(0, 80, 80);
+  
   text(`Powerup Timer: ${powerupTimer}`, width / 2, 25);
+  
   if (powerupTimer <= 0) {
     powerupOn = false;
     step = 10;
   }
 }
 
+//if powerup is not collected in time, it respawns
 function timedOut() {
   count1++;
   count2++;
